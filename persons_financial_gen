@@ -1,0 +1,116 @@
+import csv
+import random
+from datetime import datetime, timedelta
+
+#Financial stability. Verify a person’s financial stability (bankruptcies, etc.)
+
+def generate_credit_score():
+    return random.randint(500, 850)
+
+def generate_debt_amount():
+    return f"${random.randint(1000, 100000)}"
+
+def generate_income_level():
+    return f"${random.randint(20000, 150000)}"
+
+def generate_assets():
+    assets_list = ["Home", "Car", "Investments", "Retirement Fund", "Rental Property", "Stocks", "Investment Portfolio"]
+    num_assets = random.randint(0, len(assets_list))
+    return ", ".join(random.sample(assets_list, num_assets))
+
+def generate_credit_utilization_ratio():
+    return f"{random.randint(10, 60)}%"
+
+def generate_payment_history():
+    payment_history_options = ["Excellent", "Good", "Fair", "Poor"]
+    return random.choice(payment_history_options)
+
+def generate_employment_status():
+    employment_status_options = ["Employed", "Unemployed", "Self-Employed"]
+    return random.choice(employment_status_options)
+
+def generate_financial_liabilities():
+    financial_liabilities_list = ["Student Loans", "Mortgage", "Credit Card Debt", "Personal Loans", "Medical Bills"]
+    num_liabilities = random.randint(0, len(financial_liabilities_list))
+    return ", ".join(random.sample(financial_liabilities_list, num_liabilities))
+
+def generate_bankruptcy_status():
+    return random.choice(["Yes", "No"])
+
+def generate_bankruptcy_type():
+    if random.random() < 0.2:  # 20% chance of having a bankruptcy type
+        return random.choice(["Chapter 7", "Chapter 13"])
+    else:
+        return "-"
+
+def generate_financial_health_assessment():
+    return random.choice(["Weak", "Moderate", "Strong", "Stable"])
+
+def generate_date_within_range(start_date, end_date):
+    delta = end_date - start_date
+    random_days = random.randint(0, delta.days)
+    return start_date + timedelta(days=random_days)
+
+def generate_random_record():
+    credit_score = generate_credit_score()
+    debt_amount = generate_debt_amount()
+    income_level = generate_income_level()
+    assets = generate_assets()
+    credit_utilization_ratio = generate_credit_utilization_ratio()
+    payment_history = generate_payment_history()
+    employment_status = generate_employment_status()
+    financial_liabilities = generate_financial_liabilities()
+    bankruptcy_status = generate_bankruptcy_status()
+    bankruptcy_type = generate_bankruptcy_type()
+    financial_health_assessment = generate_financial_health_assessment()
+    last_updated_date = datetime.now().strftime('%Y-%m-%d')
+    bankruptcy_filing_date = generate_date_within_range(datetime(2010, 1, 1), datetime.now())
+    account_opening_date = generate_date_within_range(datetime(2000, 1, 1), datetime.now())
+    last_payment_date = generate_date_within_range(datetime(2020, 1, 1), datetime.now())
+    financial_health_assessment_date = generate_date_within_range(datetime(2020, 1, 1), datetime.now())
+    
+    record = {
+        "Name": "Individual",
+        "Credit Score": credit_score,
+        "Debt Amount": debt_amount,
+        "Income Level": income_level,
+        "Assets": assets,
+        "Credit Utilization Ratio": credit_utilization_ratio,
+        "Payment History": payment_history,
+        "Employment Status": employment_status,
+        "Financial Liabilities": financial_liabilities,
+        "Bankruptcy Status": bankruptcy_status,
+        "Bankruptcy Type": bankruptcy_type,
+        "Financial Health Assessment": financial_health_assessment,
+        "Last Updated Date": last_updated_date,
+        "Bankruptcy Filing Date": bankruptcy_filing_date.strftime('%Y-%m-%d'),
+        "Account Opening Date": account_opening_date.strftime('%Y-%m-%d'),
+        "Last Payment Date": last_payment_date.strftime('%Y-%m-%d'),
+        "Financial Health Assessment Date": financial_health_assessment_date.strftime('%Y-%m-%d')
+    }
+    return record
+
+def generate_records(num_records):
+    records = []
+    for _ in range(num_records):
+        record = generate_random_record()
+        records.append(record)
+    return records
+
+def write_records_to_csv(records, filename):
+    with open(filename, mode='w', newline='') as file:
+        fieldnames = records[0].keys()
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+
+        writer.writeheader()
+        for record in records:
+            writer.writerow(record)
+
+def main():
+    num_records = 10
+    records = generate_records(num_records)
+    write_records_to_csv(records, 'financial_stability_records.csv')
+    print(f"{num_records} records have been generated and saved to 'financial_stability_records.csv'.")
+
+if __name__ == "__main__":
+    main()
