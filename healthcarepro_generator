@@ -1,0 +1,75 @@
+import csv
+import random
+
+## Licensing and Credentials. For healthcare professionals (doctors, nurses, etc.), validate their professional licenses and ensure they are up-to-date and valid.
+
+
+def generate_license_issue_date():
+    # Generate a random date between January 1, 2000 and January 1, 2024
+    return random.randint(946684800000, 1672473600000)  # Milliseconds since epoch
+
+def generate_license_expiry_date(issue_date):
+    # Generate a random expiry date after the issue date, maximum 10 years validity
+    return issue_date + random.randint(31536000000, 315360000000)  # Milliseconds in 1 to 10 years
+
+def generate_record(index):
+    professions = ["Registered Nurse (RN)", "Physician", "Nurse Practitioner (NP)", "Licensed Practical Nurse (LPN)", "Surgeon", "Pediatrician", "Anesthesiologist", "Family Physician", "Psychologist", "Orthopedic Surgeon"]
+    states = ["California", "New York", "Texas", "Florida", "Illinois", "Pennsylvania", "Ohio", "Georgia", "Michigan", "North Carolina"]
+    education_degrees = ["Bachelor of Science in Nursing (BSN)", "Doctor of Medicine (MD)", "Master of Science in Nursing (MSN)", "Diploma in Practical Nursing", "Doctor of Psychology (PsyD)"]
+
+    name = f"Healthcare Provider {index}"
+    profession = random.choice(professions)
+    license_number = f"{profession[:3].upper()}{random.randint(10000, 99999)}"
+    state = random.choice(states)
+    license_issue_date = generate_license_issue_date()
+    license_expiry_date = generate_license_expiry_date(license_issue_date)
+    education = random.choice(education_degrees)
+    graduation_year = random.randint(1990, 2022)
+    
+    record = {
+        "Name": name,
+        "Profession": profession,
+        "License Number": license_number,
+        "State": state,
+        "License Status": "Active",
+        "License Issue Date (Epoch Millis)": license_issue_date,
+        "License Expiry Date (Epoch Millis)": license_expiry_date,
+        "Education": education,
+        "Graduation Year": graduation_year,
+        "License Type": profession.split(" ")[-1],
+        "License Class": "Full",
+        "Specialization": "",
+        "Medical School": "",
+        "Residency Training": "",
+        "Fellowship Training": "",
+        "Certifications": "",
+        "Employment History": "",
+        "Disciplinary Actions": "None"
+    }
+
+    return record
+
+def generate_records(num_records):
+    records = []
+    for i in range(1, num_records + 1):
+        record = generate_record(i)
+        records.append(record)
+    return records
+
+def write_records_to_csv(records, filename):
+    with open(filename, mode='w', newline='') as file:
+        fieldnames = records[0].keys()
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+
+        writer.writeheader()
+        for record in records:
+            writer.writerow(record)
+
+def main():
+    num_records = 10
+    records = generate_records(num_records)
+    write_records_to_csv(records, 'healthcare_records.csv')
+    print(f"{num_records} records have been generated and saved to 'healthcare_records.csv'.")
+
+if __name__ == "__main__":
+    main()
